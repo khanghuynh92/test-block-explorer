@@ -1,0 +1,26 @@
+<footer class="footer">
+  <div class="footer-body container">
+    <!-- Logo -->
+    <div class="row footer-logo-row">
+      <div class="col-lg-12">
+        <%= link to: webapp_url(@conn), class: "footer-brand" do %>
+          <img class="footer-logo" src="<%= static_path(@conn, logo_footer()) %>" alt="<%= subnetwork_title() %>" style="display: none;" />
+          <span class="logo-text in-footer">Crabada explorer</span>
+
+          <%= if logo_text() do %>
+            <span class="logo-text in-footer"> <%= logo_text() %> </span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <% other_explorers = other_explorers() %>
+    <% col_size = if Enum.empty?(other_explorers), do: 3, else: 2 %>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <p class="footer-info-text"><%= gettext("Copyright © 2021 Crabada. All rights reserved. Powered by Blockscout") %></p>
+      </div>
+    </div>
+  </div>
+</footer>
