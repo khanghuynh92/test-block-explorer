@@ -12,13 +12,14 @@ services:
     environment:
       - DATABASE_URL=postgresql://eth-user:eth-password@postgres:5432/explorer?ssl=false
       - ETHEREUM_JSONRPC_VARIANT=ganache
-      - ETHEREUM_JSONRPC_HTTP_URL=http://host.docker.internal:${GPORT}
-      - ETHEREUM_JSONRPC_WS_URL=ws://host.docker.internal:${GPORT}
+      - ETHEREUM_JSONRPC_HTTP_URL=http://host.docker.internal:8545
+      - ETHEREUM_JSONRPC_WS_URL=ws://host.docker.internal:8545
     extra_hosts: 
       - host.docker.internal:host-gateway
     entrypoint: '/bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"'
     depends_on:
       - postgres
+      - ganache
   
   postgres:
     image: postgres:13-alpine
@@ -30,3 +31,21 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"
+    volumes:
+      - ./ganache_data:/ganache_data
+    entrypoint:
+      - node
+      - /app/ganache-core.docker.cli.js
+      - --deterministic
+      - --db=/ganache_data
+      - --mnemonic
+      - 'minimum symptom minute gloom tragic situate silver mechanic salad amused elite beef'
+      - --networkId
+      - '5777'
+      - --hostname
+      - '0.0.0.0'
+      - --debug
